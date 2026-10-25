@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoTrack</title>
+  <style>
+    :root{
+      --bg:#071e18;
+      --bg-2:#0d2a23;
+      --panel:#113a30;
+      --panel-2:#174b3d;
+      --panel-3:#1f5e4d;
+      --green:#87d5a7;
+      --green-2:#bfecc8;
+      --green-3:#dff8e9;
+      --text:#edfef3;
+      --muted:#cfe7d9;
+      --soft:#9dc7b0;
+      --accent:#f4c76f;
+      --shadow:0 20px 45px rgba(4, 17, 15, 0.45);
+      --radius:26px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(135,213,167,0.17), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(37, 155, 109, 0.18), transparent 30%),
+        linear-gradient(180deg, #061a16 0%, #0d2c27 100%);
+      color:var(--text);
+      line-height:1.7;
+    }
+
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+
+    .container{width:min(1180px, calc(100% - 2rem));margin:0 auto}
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:30;
+      background:rgba(7,30,24,0.8);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(135,213,167,0.12);
+    }
+
+    .nav-wrap{
+      min-height:82px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+      font-weight:800;
+      letter-spacing:.05em;
+      color:var(--green-3);
+    }
+
+    .brand-mark{
+      width:42px;height:42px;border-radius:50%;
+      background:linear-gradient(135deg, var(--green), #39a66d);
+      display:grid;place-items:center;
+      font-weight:900;
+      color:#062d24;
+      box-shadow:0 12px 25px rgba(54,155,98,0.45);
+      animation:float 3s ease-in-out infinite;
+    }
+
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+    .nav{
+      display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;
+    }
+
+    .nav a{
+      position:relative;
+      padding:.8rem 1rem;
+      border-radius:999px;
+      color:var(--green-2);
+      font-weight:700;
+      transition:all .25s ease;
+    }
+
+    .nav a::after{
+      content:"";
+      position:absolute;
+      left:14%;right:14%;bottom:6px;
+      height:2px;background:linear-gradient(90deg, var(--green), var(--green-2));
+      transform:scaleX(0);transform-origin:center;transition:transform .25s ease;
+    }
+
+    .nav a:hover,.nav a:focus-visible{
+      background:rgba(135,213,167,0.08);
+      transform:translateY(-2px);
+    }
+
+    .nav a:hover::after,.nav a:focus-visible::after{transform:scaleX(1)}
+
+    .hero{padding:92px 0 70px;position:relative;overflow:hidden}
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:2rem}
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;gap:.5rem;
+      padding:.55rem .9rem;
+      border-radius:999px;
+      background:rgba(135, 213, 167, 0.12);
+      border:1px solid rgba(135,213,167,0.22);
+      color:var(--green-2);
+      font-weight:800;
+      letter-spacing:.08em;text-transform:uppercase;font-size:.72rem;
+      animation:popIn .8s ease both;
+    }
+
+    @keyframes popIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+    h1{font-size:clamp(2.8rem, 6vw, 5rem);line-height:1.04;letter-spacing:-.05em;margin:1rem 0;color:var(--green-3)}
+    .hero p{color:var(--muted);font-size:1.05rem;max-width:620px}
+
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin:1.5rem 0 2rem}
+
+    .btn{
+      border:none;cursor:pointer;border-radius:999px;padding:1rem 1.5rem;
+      font-weight:800;font-size:1rem;display:inline-flex;align-items:center;justify-content:center;
+      transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;
+    }
+
+    .btn:hover{transform:translateY(-3px);filter:brightness(1.06)}
+    .btn-primary{
+      background:linear-gradient(135deg, var(--green), #45b57f);
+      color:#07261d;
+      box-shadow:0 18px 28px rgba(67,181,128,0.28);
+    }
+    .btn-secondary{
+      background:rgba(255,255,255,0.02);
+      color:var(--green-2);
+      border:1px solid rgba(135,213,167,0.18);
+    }
+
+    .stats{display:flex;flex-wrap:wrap;gap:1rem}
+    .stat{
+      min-width:140px;background:rgba(17,58,48,0.82);border:1px solid rgba(135,213,167,0.12);
+      border-radius:18px;padding:1rem 1.2rem;box-shadow:var(--shadow)
+    }
+    .stat strong{display:block;font-size:1.5rem;color:var(--green-3)}
+    .stat span{color:var(--muted);font-size:.85rem}
+
+    .hero-visual{display:flex;justify-content:center;align-items:center;min-height:500px;position:relative}
+    .orbit{
+      position:relative;width:min(100%, 470px);aspect-ratio:1;border-radius:50%;
+      background:radial-gradient(circle at 35% 30%, rgba(135,213,167,0.12), rgba(20,68,58,0.8) 36%, rgba(13,42,35,0.95) 70%, rgba(6,25,22,0.96));
+      box-shadow:inset 0 0 26px rgba(135,213,167,0.18), 0 28px 54px rgba(7,17,15,0.26);
+      display:grid;place-items:center;animation:spin 18s linear infinite;
+    }
+
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+    .eco-card{
+      position:absolute; width:165px; height:165px;border-radius:28px;background:linear-gradient(135deg, rgba(20,59,50,0.9), rgba(32,86,69,0.9));
+      border:1px solid rgba(135,213,167,0.15);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;
+      color:var(--green-3);font-weight:800;animation:drift 6s ease-in-out infinite;
+    }
+    .eco-card:nth-child(1){top:22px; left:25px}
+    .eco-card:nth-child(2){top:65px; right:30px; animation-delay:.9s}
+    .eco-card:nth-child(3){bottom:32px; left:40px; animation-delay:1.5s}
+    .eco-card:nth-child(4){bottom:42px; right:54px; animation-delay:2.2s}
+
+    @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+    .eco-card .icon{font-size:2.4rem;display:block;margin-bottom:.3rem}
+
+    .section{padding:70px 0}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem}
+    .section-head h2{margin:0;font-size:clamp(2rem,3vw,3rem);letter-spacing:-.04em;color:var(--green-3)}
+    .section-head p{margin:0;color:var(--muted);max-width:680px}
+
+    .learn-grid,.footprint-grid,.active-grid{display:grid;gap:1.2rem}
+    .learn-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .footprint-grid{grid-template-columns:repeat(5,minmax(0,1fr));margin-top:1.5rem}
+    .active-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:1.5rem}
+
+    .card{
+      background:rgba(17,58,48,0.85);border:1px solid rgba(135,213,167,0.1);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow);
+      transition:transform .25s ease, border-color .25s ease;
+    }
+    .card:hover{transform:translateY(-4px);border-color:rgba(135,213,167,0.2)}
+    .card h3{margin-top:0;color:var(--green-3);font-size:1.4rem}
+    .card p,.card li{color:var(--muted)}
+
+    .mini-badge{
+      display:inline-block;padding:.5rem .7rem;border-radius:999px;background:rgba(135,213,167,0.12);color:var(--green-2);font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(135,213,167,0.18);margin-bottom:.7rem
+    }
+
+    .details-list{display:flex;flex-direction:column;gap:1rem;margin-top:1.2rem}
+    details{background:rgba(17,58,48,0.72);border:1px solid rgba(135,213,167,0.08);border-radius:18px;padding:.9rem 1rem}
+    summary{cursor:pointer;list-style:none;font-weight:800;color:var(--green-3)}
+    summary::-webkit-details-marker{display:none}
+    .details-box{margin-top:1rem}
+
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem;margin-top:2rem}
+    .footprint-item{
+      background:linear-gradient(180deg, rgba(15,59,49,0.8), rgba(19,39,34,0.92));border:1px solid rgba(135,213,167,0.08);border-radius:22px;padding:1.2rem 1rem;text-align:center;box-shadow:var(--shadow);transition:transform .25s ease
+    }
+    .footprint-item:hover{transform:translateY(-4px)}
+    .footprint-item .emoji{display:block;font-size:2.3rem;margin-bottom:.6rem}
+    .footprint-item h4{margin:.25rem 0 .45rem;color:var(--green-3)}
+    .footprint-item p{margin:0;color:var(--muted);font-size:.92rem}
+
+    .activity-card{overflow:hidden;padding:0;background:rgba(17,58,48,0.9)}
+    .activity-card .img{height:200px;background-size:cover;background-position:center;position:relative}
+    .activity-card .img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(2,18,15,.08), rgba(2,18,15,.38))}
+    .activity-card .body{padding:1.15rem 1rem 1.3rem}
+    .activity-card h4{margin:0 0 .55rem;color:var(--green-3);font-size:1.2rem}
+    .activity-card p{margin:0;color:var(--muted)}
+
+    .awareness-pills{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1.5rem}
+    .pill{
+      background:linear-gradient(135deg, rgba(135,213,167,0.16), rgba(159,217,177,0.08));
+      border:1px solid rgba(135,213,167,0.16);padding:.8rem 1.15rem;border-radius:999px;
+      color:var(--green-2);font-weight:800;box-shadow:0 12px 20px rgba(8,22,19,0.22);animation:popIn .8s ease both
+    }
+    .pill:nth-child(2){animation-delay:.08s}.pill:nth-child(3){animation-delay:.16s}.pill:nth-child(4){animation-delay:.24s}.pill:nth-child(5){animation-delay:.32s}.pill:nth-child(6){animation-delay:.4s}
+
+    .quiz-wrap{
+      background:linear-gradient(180deg, rgba(17,58,48,0.82), rgba(9,29,25,0.82));
+      border:1px solid rgba(135,213,167,0.1);border-radius:28px;
+      padding:1.5rem;box-shadow:var(--shadow);
+    }
+
+    .quiz-question{display:none}
+    .quiz-question.active{display:block;animation:fade .35s ease}
+    @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    .quiz-question h3{margin:0 0 1rem;color:var(--green-3);font-size:1.5rem}
+    .options{display:grid;gap:.8rem;margin:1rem 0}
+    .option{
+      width:100%;text-align:left;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(135,213,167,0.12);
+      padding:.9rem 1rem;color:var(--text);font-weight:700;cursor:pointer;transition:all .2s ease
+    }
+    .option:hover{border-color:rgba(135,213,167,0.32);background:rgba(135,213,167,0.09);transform:translateX(3px)}
+    .option.correct{background:rgba(125, 200, 151, 0.2);border-color:rgba(125,200,151,0.55)}
+    .option.wrong{background:rgba(255,174,156,0.14);border-color:rgba(255,174,156,0.35)}
+
+    .quiz-controls{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:1rem}
+    #progressText{font-weight:800;color:var(--green-2)}
+    .result-box{
+      display:none;margin-top:1rem;border-radius:16px;padding:1rem 1.1rem;border:1px solid rgba(135,213,167,0.18);background:rgba(135,213,167,0.08);color:var(--green-3);font-weight:800;
+    }
+    .result-box.show{display:block}
+
+    .reflection-box{
+      margin-top:1.3rem;background:rgba(17,58,48,0.82);border:1px solid rgba(135,213,167,0.08);border-radius:24px;padding:1.2rem;box-shadow:var(--shadow)
+    }
+    textarea{
+      width:100%;min-height:140px;border:none;border-radius:16px;background:rgba(255,255,255,0.02);padding:1rem;color:var(--text);font:inherit;border:1px solid rgba(135,213,167,0.09);resize:vertical
+    }
+
+    .about-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:1.4rem;align-items:center}
+    .about-card{background:rgba(17,58,48,0.82);border:1px solid rgba(135,213,167,0.08);border-radius:26px;padding:1.5rem;box-shadow:var(--shadow)}
+    .about-visual{
+      min-height:330px;border-radius:26px;background:
+        linear-gradient(135deg, rgba(98, 213, 153, 0.22), rgba(7,30,24,0.25)),
+        url('https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      box-shadow:var(--shadow)
+    }
+
+    footer{text-align:center;padding:30px 0 60px;color:var(--muted);font-weight:700}
+
+    @media (max-width: 960px){
+      .hero-grid,.about-grid,.two-col{grid-template-columns:1fr}
+      .learn-grid{grid-template-columns:1fr 1fr}
+      .footprint-grid{grid-template-columns:1fr 1fr 1fr}
+      .active-grid{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width: 680px){
+      .nav-wrap{flex-direction:column;padding:1rem 0}
+      .nav{justify-content:flex-start;width:100%}
+      .nav a{flex:1 1 auto;text-align:center}
+      .learn-grid,.footprint-grid,.active-grid,.two-col,.about-grid{grid-template-columns:1fr}
+      .hero{padding-top:70px}
+      .hero-actions{flex-direction:column;align-items:stretch}
+      .btn{width:100%}
+      .quiz-controls{justify-content:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav-wrap">
+      <div class="brand" aria-label="EcoTrack brand">
+        <span class="brand-mark">E</span>
+        <span>EcoTrack</span>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#learn">Learn</a>
+        <a href="#footprint">Carbon Footprint</a>
+        <a href="#citizen">Be an Active Citizen</a>
+        <a href="#awareness">Awareness</a>
+        <a href="#quiz">Quiz</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">EcoTrack • Sustainability</span>
+          <h1>Grow greener habits together.</h1>
+          <p>
+            EcoTrack helps communities understand environmental citizenship, reduce their carbon footprint,
+            and become active, informed citizens for a cleaner and healthier world.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#learn">Learn more</a>
+            <a class="btn btn-secondary" href="#quiz">Try the quiz</a>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <strong>5</strong>
+              <span>Core Impact Areas</span>
+            </div>
+            <div class="stat">
+              <strong>100%</strong>
+              <span>Community Action</span>
+            </div>
+            <div class="stat">
+              <strong>24/7</strong>
+              <span>Awareness & Education</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="EcoTrack environmental illustration">
+          <div class="orbit">
+            <div class="eco-card"><span class="icon">🌱</span>Green</div>
+            <div class="eco-card"><span class="icon">♻️</span>Reuse</div>
+            <div class="eco-card"><span class="icon">⚡</span>Energy</div>
+            <div class="eco-card"><span class="icon">🌍</span>Earth</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="learn">
+      <div class="container">
+        <div class="section-head">
+          <h2>Learn</h2>
+          <p>Environmental citizenship means being a responsible member of society who takes action to protect the environment and use natural resources wisely.</p>
+        </div>
+
+        <div class="learn-grid">
+          <article class="card">
+            <div class="mini-badge">Citizenship</div>
+            <h3>What is Citizenship?</h3>
+            <p>Environmental citizenship means being a responsible member of society who takes action to protect the environment and use natural resources wisely.</p>
+            <p>Every action, no matter how small, can help create a cleaner and healthier planet.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-badge">Engagement</div>
+            <h3>What is Civic Engagement?</h3>
+            <p>Civic engagement is the active participation of individuals in community activities and initiatives that protect the environment.</p>
+            <p>Through clean-up drives, recycling programs, and environmental campaigns, people can reduce their carbon footprint and build a sustainable future.</p>
+          </article>
+
+          <article class="card">
+            <div class="mini-badge">Rights</div>
+            <h3>Rights and Responsibilities</h3>
+            <p>People have rights to a clean, healthy, and safe environment, but they also have duties to protect it.</p>
+            <ul>
+              <li>Right to a clean and healthy environment</li>
+              <li>Right to environmental information</li>
+              <li>Right to participate in decision-making</li>
+              <li>Duty to reduce waste and pollution</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="details-list">
+          <details open>
+            <summary>What is Environmental Advocacy?</summary>
+            <div class="details-box card">
+              <p>Our environmental advocacy focuses on raising awareness about carbon footprints and encouraging individuals to reduce the greenhouse gas emissions associated with their daily activities.</p>
+              <p>Through education and community participation, this advocacy aims to inspire people to adopt sustainable habits, conserve natural resources, and make environmentally responsible choices.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Community Action</summary>
+            <div class="details-box card">
+              <p>It refers to the collective efforts of individuals, groups, schools, and local organizations to protect the environment and address environmental problems.</p>
+              <ul>
+                <li>Community Clean-Up Drives</li>
+                <li>Recycling and Reuse Programs</li>
+                <li>Energy Conservation Campaigns</li>
+                <li>Sustainable Transportation</li>
+                <li>Tree-Planting Activities</li>
+                <li>Environmental Education and Awareness</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>Environmental Laws and Republic Acts</summary>
+            <div class="details-box card">
+              <ul>
+                <li><strong>RA 9003</strong> – Ecological Solid Waste Management Act of 2000</li>
+                <li><strong>RA 8749</strong> – Philippine Clean Air Act of 1999</li>
+                <li><strong>RA 9275</strong> – Philippine Clean Water Act of 2004</li>
+                <li><strong>RA 9512</strong> – National Environmental Awareness and Education Act of 2008</li>
+                <li><strong>RA 9729</strong> – Climate Change Act of 2009</li>
+                <li><strong>RA 11898</strong> – Extended Producer Responsibility Act of 2022</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>From Discarded to Desire</summary>
+            <div class="details-box card">
+              <p>Environmental advocacy encourages people to see discarded materials as potential resources instead of waste. It promotes creativity, responsible waste management, and sustainable practices that reduce environmental impact.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="footprint">
+      <div class="container">
+        <div class="section-head">
+          <h2>Carbon Footprint</h2>
+          <p>Carbon footprint is the total amount of greenhouse gases released into the atmosphere by the activities of a person, household, organization, or product.</p>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top:0">What is Carbon Footprint?</h3>
+          <p>These emissions can come from transportation, electricity consumption, food production, manufacturing, and waste disposal. Reducing them requires awareness and daily responsibility.</p>
+        </div>
+
+        <div class="footprint-grid">
+          <article class="footprint-item">
+            <span class="emoji">🚗</span>
+            <h4>Transportation</h4>
+            <p>Fuel-powered vehicles release carbon dioxide when burning gasoline or diesel.</p>
+          </article>
+
+          <article class="footprint-item">
+            <span class="emoji">💡</span>
+            <h4>Electricity</h4>
+            <p>Using electricity generated from fossil fuels contributes to greenhouse gas emissions.</p>
+          </article>
+
+          <article class="footprint-item">
+            <span class="emoji">🥗</span>
+            <h4>Food</h4>
+            <p>Food production and waste can generate greenhouse gases and methane emissions.</p>
+          </article>
+
+          <article class="footprint-item">
+            <span class="emoji">🗑️</span>
+            <h4>Waste</h4>
+            <p>Organic waste in landfills can release methane, while deforestation reduces carbon absorption.</p>
+          </article>
+
+          <article class="footprint-item">
+            <span class="emoji">🏭</span>
+            <h4>Production</h4>
+            <p>Factories release emissions when producing goods and using raw materials.</p>
+          </article>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="mini-badge">Effects</div>
+            <h3>Effects on the Environment</h3>
+            <ul>
+              <li><strong>Global Warming:</strong> Rising greenhouse gas concentrations increase Earth's average temperature.</li>
+              <li><strong>Extreme Weather:</strong> Climate change can worsen heat waves and heavy rainfall.</li>
+              <li><strong>Rising Sea Levels:</strong> Melting ice threatens coastal communities and habitats.</li>
+              <li><strong>Loss of Biodiversity:</strong> Temperature and habitat changes disrupt ecosystems.</li>
+              <li><strong>Agriculture and Water Stress:</strong> Droughts and floods affect crop production and water resources.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="mini-badge">Action</div>
+            <h3>How to Reduce Our Carbon Footprint</h3>
+            <ul>
+              <li>Save electricity when not in use.</li>
+              <li>Choose sustainable transportation.</li>
+              <li>Reduce, reuse, and recycle.</li>
+              <li>Prevent food waste.</li>
+              <li>Practice responsible consumption.</li>
+              <li>Protect trees and green spaces.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="citizen">
+      <div class="container">
+        <div class="section-head">
+          <h2>Be an Active Citizen</h2>
+          <p>Community action is the collective effort of individuals, groups, schools, and organizations to protect the environment.</p>
+        </div>
+
+        <div class="active-grid">
+          <article class="card activity-card">
+            <div class="img" style="background-image:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80');"></div>
+            <div class="body">
+              <h4>Community Clean-Up Drive</h4>
+              <p>Encourages responsible waste collection and segregation to help maintain clean and healthy surroundings.</p>
+            </div>
+          </article>
+
+          <article class="card activity-card">
+            <div class="img" style="background-image:url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=900&q=80');"></div>
+            <div class="body">
+              <h4>Product Experimentation</h4>
+              <p>Explores creative ways to transform discarded materials into useful and practical products.</p>
+            </div>
+          </article>
+
+          <article class="card activity-card">
+            <div class="img" style="background-image:url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=900&q=80');"></div>
+            <div class="body">
+              <h4>Environmental Symposium</h4>
+              <p>Provides an opportunity to share knowledge about carbon footprints, climate change, and sustainable living.</p>
+            </div>
+          </article>
+
+          <article class="card activity-card">
+            <div class="img" style="background-image:url('https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=900&q=80');"></div>
+            <div class="body">
+              <h4>Practice Sustainable Habits</h4>
+              <p>Making daily choices that protect the environment and conserve natural resources.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="awareness">
+      <div class="container">
+        <div class="section-head">
+          <h2>Awareness</h2>
+          <p>Environmental awareness is the key to making informed decisions and taking action for a sustainable future.</p>
+        </div>
+        <div class="awareness-pills">
+          <span class="pill">Environment</span>
+          <span class="pill">Community</span>
+          <span class="pill">Waste Reduction</span>
+          <span class="pill">Energy Saving</span>
+          <span class="pill">Education</span>
+          <span class="pill">Sustainability</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="quiz">
+      <div class="container">
+        <div class="section-head">
+          <h2>Quiz</h2>
+          <p>Test your understanding of environmental citizenship and carbon footprint awareness.</p>
+        </div>
+
+        <div class="quiz-wrap">
+          <div class="quiz-question active" data-question="1">
+            <h3>1. What is the best definition of environmental citizenship?</h3>
+            <div class="options">
+              <button class="option" data-correct="false">Ignoring environmental issues in daily life.</button>
+              <button class="option" data-correct="true">Being a responsible member of society who protects the environment and uses resources wisely.</button>
+              <button class="option" data-correct="false">Only focusing on personal comfort and convenience.</button>
+              <button class="option" data-correct="false">Avoiding all community responsibilities.</button>
+            </div>
+          </div>
+
+          <div class="quiz-question" data-question="2">
+            <h3>2. Which action helps reduce a person’s carbon footprint?</h3>
+            <div class="options">
+              <button class="option" data-correct="false">Leaving lights and devices on unnecessarily.</button>
+              <button class="option" data-correct="true">Walking, cycling, or using public transportation when possible.</button>
+              <button class="option" data-correct="false">Throwing all waste into one bin without sorting.</button>
+              <button class="option" data-correct="false">Buying new products every time without reusing materials.</button>
+            </div>
+          </div>
+
+          <div class="quiz-question" data-question="3">
+            <h3>3. Why is community action important?</h3>
+            <div class="options">
+              <button class="option" data-correct="false">It only benefits a few individuals.</button>
+              <button class="option" data-correct="false">It encourages pollution and waste accumulation.</button>
+              <button class="option" data-correct="true">It allows people to work together to protect the environment and address local issues.</button>
+              <button class="option" data-correct="false">It reduces the need for education and awareness.</button>
+            </div>
+          </div>
+
+          <div class="quiz-question" data-question="4">
+            <h3>4. What is the main purpose of environmental advocacy?</h3>
+            <div class="options">
+              <button class="option" data-correct="false">To ignore climate-related issues.</button>
+              <button class="option" data-correct="false">To promote only one type of lifestyle.</button>
+              <button class="option" data-correct="true">To raise awareness and encourage sustainable choices that protect the environment.</button>
+              <button class="option" data-correct="false">To make people feel guilty without action.</button>
+            </div>
+          </div>
+
+          <div class="quiz-question" data-question="5">
+            <h3>5. Which habit best supports sustainability?</h3>
+            <div class="options">
+              <button class="option" data-correct="false">Throwing away reusable materials.</button>
+              <button class="option" data-correct="false">Buying unnecessary products.</button>
+              <button class="option" data-correct="true">Reducing waste, reusing materials, and conserving natural resources.</button>
+              <button class="option" data-correct="false">Leaving household appliances on all day.</button>
+            </div>
+          </div>
+
+          <div class="quiz-controls">
+            <button class="btn btn-secondary" id="prevBtn" type="button">Previous</button>
+            <div id="progressText">Question 1 of 5</div>
+            <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
+          </div>
+
+          <div class="result-box" id="resultBox"></div>
+        </div>
+
+        <div class="reflection-box">
+          <h3 style="margin-top:0;color:var(--green-3)">Reflection</h3>
+          <textarea placeholder="Write how you can help reduce your carbon footprint and become a more active citizen in your community..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container about-grid">
+        <div class="about-card">
+          <div class="mini-badge">About</div>
+          <h2 style="margin-top:0;color:var(--green-3);font-size:2.3rem;letter-spacing:-.04em">EcoTrack</h2>
+          <p>EcoTrack is a sustainable awareness platform created to educate communities about environmental citizenship, carbon footprint reduction, and active participation in protecting the environment.</p>
+          <p>Through learning, advocacy, and action, EcoTrack encourages people to reduce waste, conserve natural resources, and build a healthier and more sustainable future for everyone.</p>
+        </div>
+        <div class="about-visual" aria-label="About EcoTrack background image"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    EcoTrack © 2026 • Caring for the planet, one choice at a time.
+  </footer>
+
+  <script>
+    const questions = [...document.querySelectorAll('.quiz-question')];
+    const progressText = document.getElementById('progressText');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultBox = document.getElementById('resultBox');
+    let currentIndex = 0;
+    let score = 0;
+
+    function updateQuestion() {
+      questions.forEach((q, i) => q.classList.toggle('active', i === currentIndex));
+      progressText.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
+      prevBtn.disabled = currentIndex === 0;
+      prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
+      prevBtn.style.cursor = currentIndex === 0 ? 'not-allowed' : 'pointer';
+      nextBtn.textContent = currentIndex === questions.length - 1 ? 'Finish' : 'Next';
+    }
+
+    function revealAnswer(selectedBtn) {
+      const options = selectedBtn.parentElement.querySelectorAll('.option');
+      options.forEach(btn => {
+        btn.disabled = true;
+        if (btn.dataset.correct === 'true') btn.classList.add('correct');
+        if (btn === selectedBtn && btn.dataset.correct === 'false') btn.classList.add('wrong');
+      });
+
+      if (selectedBtn.dataset.correct === 'true') score += 1;
+    }
+
+    document.querySelectorAll('.option').forEach(button => {
+      button.addEventListener('click', () => {
+        if (button.disabled) return;
+        revealAnswer(button);
+
+        const currentQ = questions[currentIndex];
+        const options = currentQ.querySelectorAll('.option');
+        const answered = [...options].some(opt => opt.disabled);
+
+        if (answered && currentIndex < questions.length - 1) {
+          setTimeout(() => {
+            currentIndex += 1;
+            updateQuestion();
+          }, 450);
+        }
+      });
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex -= 1;
+        updateQuestion();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < questions.length - 1) {
+        currentIndex += 1;
+        updateQuestion();
+      } else {
+        resultBox.textContent = `Your score: ${score} / ${questions.length} — Great job on your environmental awareness journey!`;
+        resultBox.classList.add('show');
+      }
+    });
+
+    updateQuestion();
+  </script>
+</body>
+</html>
